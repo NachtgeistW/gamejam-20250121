@@ -25,6 +25,7 @@ namespace Level
     public enum MapTileType
     {
         Wall,
-        Road
+        Road,
+        Door
     }
 }

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Level
 {
@@ -17,6 +18,23 @@ namespace Level
         [field: SerializeField] public float Speed { get; private set; }
         
         [field: SerializeField] public Sprite Sprite { get; private set; }
+
+        private void Update()
+        {
+            switch (State)
+            {
+                case State.Move:
+                    OnMove();
+                    break;
+                case State.CatchPlayer:
+                    OnCatchPlayer();
+                    break;
+                case State.Stay:
+                default:
+                    OnStay();
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
 
         private void OnStay()
         {
