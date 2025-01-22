@@ -24,32 +24,25 @@ namespace Level
         public void Show()
         {
             //animator.SetTrigger("Show");
-            
+
             //throw new System.NotImplementedException();
         }
 
         private void CheckCollision()
         {
             Vector2 face = transform.forward.normalized;
-            Collider[] colliders = Physics.OverlapSphere(transform.position, 1f, LayerMask.GetMask("wall"));
-            List<GameObject>walls = new List<GameObject>();
-            foreach (Collider col in colliders)
+            var colliders = Physics.OverlapSphere(transform.position, 1f, LayerMask.GetMask("wall"));
+            var walls = new List<GameObject>();
+            foreach (var col in colliders)
             {
-                Vector2 pos = (col.transform.position-transform.position).normalized;//获取碰撞到的墙壁的位置
-                float angleBetween=Vector2.Angle(face,pos);
+                Vector2 pos = (col.transform.position - transform.position).normalized; //获取碰撞到的墙壁的位置
+                var angleBetween = Vector2.Angle(face, pos);
                 if (angleBetween < angle / 2)
-                {
-                    if(Physics.Raycast(transform.position,pos,out RaycastHit hit, 1f))
-                    {
+                    if (Physics.Raycast(transform.position, pos, out var hit, 1f))
                         if (hit.collider == col)
-                        {
                             walls.Add(col.gameObject);
-                            
-                        }
-                        
-                    }
-                }
             }
+
             //cast put walls list to delight
             EventCenter.Broadcast(new WaveHitWallEvent { hittedWalls = walls });
             //throw new System.NotImplementedException();
