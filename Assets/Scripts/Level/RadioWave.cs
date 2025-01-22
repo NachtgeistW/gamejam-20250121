@@ -1,28 +1,60 @@
-﻿using System;
+﻿using Plutono.Util;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
+using static Level.GameEvent;
 
 namespace Level
 {
     [RequireComponent(typeof(SpriteRenderer))]
     public class RadioWave : MonoBehaviour
     {
-        [field: SerializeField] public Vector2 Position { get; set; }
+        [field: SerializeField] public Vector2 WPosition { get; set; }
         [field: SerializeField] public Sprite Sprite { get; private set; }
+
+        public Animator animator { get; private set; }
+        public float angle { get; private set; }
 
         private void Update()
         {
-            Move();
+            CheckCollision();
         }
 
         //显示电波
         public void Show()
         {
-            throw new System.NotImplementedException();
+            //animator.SetTrigger("Show");
+            
+            //throw new System.NotImplementedException();
         }
 
-        private void Move()
+        private void CheckCollision()
         {
-            throw new System.NotImplementedException();
+            Vector2 face = transform.forward.normalized;
+            Collider[] colliders = Physics.OverlapSphere(transform.position, 1f, LayerMask.GetMask("wall"));
+            List<GameObject>walls = new List<GameObject>();
+            foreach (Collider col in colliders)
+            {
+                Vector2 pos = (col.transform.position-transform.position).normalized;//获取碰撞到的墙壁的位置
+                float angleBetween=Vector2.Angle(face,pos);
+                if (angleBetween < angle / 2)
+                {
+                    if(Physics.Raycast(transform.position,pos,out RaycastHit hit, 1f))
+                    {
+                        if (hit.collider == col)
+                        {
+                            walls.Add(col.gameObject);
+                            
+                            
+
+                        }
+                        
+                    }
+                }
+            }
+            //cast put walls list to delight
+            EventCenter.Broadcast(new WaveHitWallEvent { hittedWalls = walls });
+            //throw new System.NotImplementedException();
         }
     }
 }

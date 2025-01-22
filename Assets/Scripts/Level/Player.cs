@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Level
 {
-    [RequireComponent(typeof(SpriteRenderer))]
+    //[RequireComponent(typeof(SpriteRenderer))]
     public class Player : MonoBehaviour
     {
         [field: SerializeField] public float Speed { get; private set; }
@@ -14,7 +14,7 @@ namespace Level
         private Vector2 movementInput;
         private bool isMoving;
         
-        [field: SerializeField] public Sprite Sprite { get; private set; }
+        //[field: SerializeField] public Sprite Sprite { get; private set; }
 
         private void Update()
         {
@@ -27,8 +27,11 @@ namespace Level
         {
             InputX = Input.GetAxisRaw("Horizontal");
             InputY = Input.GetAxisRaw("Vertical");
-
-            throw new System.NotImplementedException();
+            Vector2 movement = new Vector2(InputX, InputY);
+            transform.LookAt((Vector2)transform.position + movement);
+            
+            transform.position +=new Vector3 ((movement * Speed * Time.deltaTime).x, (movement * Speed * Time.deltaTime).y,0f);
+            //throw new System.NotImplementedException();
         }
 
         //发射电波
@@ -38,6 +41,12 @@ namespace Level
             {
                 throw new System.NotImplementedException();
             }
+        }
+
+        //获取玩家在地图上面的位置
+        public Vector2Int getPosition()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
