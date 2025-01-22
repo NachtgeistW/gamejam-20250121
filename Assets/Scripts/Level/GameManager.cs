@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Plutono.Util;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -15,6 +16,8 @@ namespace Level
         public Map map;
         public Player player;
         public List<Enemy> enemies;
+
+        public bool IsGameOver { get; private set; } = false;
 
         private void Start()
         {

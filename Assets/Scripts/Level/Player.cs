@@ -15,7 +15,7 @@ namespace Level
         private Vector2 movementInput;
         private bool isMoving;
         private bool gameover = false;
-        private float rotationspeed = 100f;
+        private const float RotationSpeed = 100f;
         private bool isCollision = false;
         private float templine = 0.3f;
 
@@ -24,46 +24,62 @@ namespace Level
 
         private Rigidbody2D rb2d;
 
+        private bool isMoveEnable;
+
         private void Start()
         {
-            StartCoroutine(Move());
-            
             //grid = FindObjectOfType<Grid>();
             cam = Camera.main;
         }
 
         private void Update()
         {
+            if (GameManager.Instance.IsGameOver)
+            {
+                isMoveEnable = false;
+                return;
+            }
+
+            isMoveEnable = true;
+
+            Move();
+            UpdatePosition();
             SendOutRadioWaves();
         }
 
-        private IEnumerator Move()
+        private void Move()
         {
-            while (gameover == false)
-            {
-                InputX = Input.GetAxisRaw("Horizontal"); //rotation
-                transform.Rotate(0, 0, -InputX * rotationspeed * Time.deltaTime);
+            //while (gameover == false)
+            //{
+            //    InputX = Input.GetAxisRaw("Horizontal"); //rotation
+            //    transform.Rotate(0, 0, -InputX * rotationspeed * Time.deltaTime);
 
-                if (isCollision == false)
-                {
-                    InputY = Input.GetAxisRaw("Vertical"); //movement
-                    transform.Translate(InputY * Speed * Time.deltaTime, 0, 0, Space.Self);
-                    var hit = Physics2D.Raycast(transform.position, Vector2.right, templine, LayerMask.GetMask("Wall"));
-                    if (hit.collider != null) isCollision = true;
-                }
-                else
-                {
-                    Debug.Log("isCollision");
-                    var hit = Physics2D.Raycast(transform.position, Vector2.right, templine, LayerMask.GetMask("Wall"));
-                    if (hit.collider == null) isCollision = false;
-                }
+            //    if (isCollision == false)
+            //    {
+            //        InputY = Input.GetAxisRaw("Vertical"); //movement
+            //        transform.Translate(InputY * Speed * Time.deltaTime, 0, 0, Space.Self);
+            //        var hit = Physics2D.Raycast(transform.position, Vector2.right, templine, LayerMask.GetMask("Wall"));
+            //        if (hit.collider != null) isCollision = true;
+            //    }
+            //    else
+            //    {
+            //        Debug.Log("isCollision");
+            //        var hit = Physics2D.Raycast(transform.position, Vector2.right, templine, LayerMask.GetMask("Wall"));
+            //        if (hit.collider == null) isCollision = false;
+            //    }
 
-                UpdatePosition();
-                
-                yield return null;
-            }
+            //    UpdatePosition();
 
-            yield return null;
+            //    yield return null;
+            //}
+            if (!isMoveEnable) return;
+
+            InputX = Input.GetAxisRaw("Horizontal"); //rotation
+            transform.Rotate(0, 0, -InputX * RotationSpeed * Time.deltaTime);
+
+            if (isCollision) return;
+            InputY = Input.GetAxisRaw("Vertical"); //movement
+            transform.Translate(InputY * Speed * Time.deltaTime, 0, 0, Space.Self);
         }
 
         private void UpdatePosition()
