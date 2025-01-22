@@ -13,23 +13,21 @@ namespace Level
         [field: SerializeField] public float InputX { get; private set; }
         [field: SerializeField] public float InputY { get; private set; }
         private Vector2 movementInput;
-        private bool isMoving;
-        private bool gameover = false;
         private const float RotationSpeed = 100f;
-        private bool isCollision = false;
-        private float templine = 0.3f;
+        private const bool isCollision = false;
+        private const float tempLine = 0.3f;
 
-        public Grid grid;
-        public Camera cam;
+        public Grid Grid;
+        public Camera Cam;
 
         private Rigidbody2D rb2d;
 
-        private bool isMoveEnable;
+        private bool isMoveEnable = true;
 
         private void Start()
         {
             //grid = FindObjectOfType<Grid>();
-            cam = Camera.main;
+            Cam = Camera.main;
         }
 
         private void Update()
@@ -39,8 +37,6 @@ namespace Level
                 isMoveEnable = false;
                 return;
             }
-
-            isMoveEnable = true;
 
             Move();
             UpdatePosition();
@@ -58,13 +54,13 @@ namespace Level
             //    {
             //        InputY = Input.GetAxisRaw("Vertical"); //movement
             //        transform.Translate(InputY * Speed * Time.deltaTime, 0, 0, Space.Self);
-            //        var hit = Physics2D.Raycast(transform.position, Vector2.right, templine, LayerMask.GetMask("Wall"));
+            //        var hit = Physics2D.Raycast(transform.position, Vector2.right, tempLine, LayerMask.GetMask("Wall"));
             //        if (hit.collider != null) isCollision = true;
             //    }
             //    else
             //    {
             //        Debug.Log("isCollision");
-            //        var hit = Physics2D.Raycast(transform.position, Vector2.right, templine, LayerMask.GetMask("Wall"));
+            //        var hit = Physics2D.Raycast(transform.position, Vector2.right, tempLine, LayerMask.GetMask("Wall"));
             //        if (hit.collider == null) isCollision = false;
             //    }
 
@@ -84,16 +80,15 @@ namespace Level
 
         private void UpdatePosition()
         {
-            var pos = grid.WorldToCell(transform.position);
+            var pos = Grid.WorldToCell(transform.position);
             Position = new Vector2Int(pos.x, pos.y);
         }
         //玩家移动
 
 
         //玩家死亡
-        public void GameOver()
+        public void OnGameOver()
         {
-            gameover = true;
             Destroy(gameObject);
         }
 
@@ -106,19 +101,18 @@ namespace Level
         //获取玩家在地图上面的位置
         public Vector2Int GetPosition()
         {
-            var pos = grid.WorldToCell(transform.position);
-            Position = new Vector2Int(pos.x, pos.y);
+            var pos = Grid.WorldToCell(transform.position);
             return new Vector2Int(pos.x, pos.y);
         }
 
         /// <summary>
-        /// 将玩家的位置移动到指定位置
+        /// 将玩家的位置移动到指定瓦片地图的正中心
         /// </summary>
         /// <param name="position">要移动的位置</param>
         public void MovePlayerTo(Vector2Int position)
         {
-            var cellSize = grid.cellSize.x;
-            var worldPos = grid.CellToWorld(new Vector3Int(position.x, position.y));
+            var cellSize = Grid.cellSize.x;
+            var worldPos = Grid.CellToWorld(new Vector3Int(position.x, position.y));
             transform.position = new Vector3(worldPos.x + cellSize / 2, worldPos.y + cellSize / 2, transform.position.z);
         }
     }
