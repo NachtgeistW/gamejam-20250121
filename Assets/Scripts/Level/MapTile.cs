@@ -17,14 +17,15 @@ namespace Level
         
         private void Start()
         {
-            TilemapPos2Position();
+            //TilemapPos2Position();
         }
 
-        private void TilemapPos2Position()
+        public Vector3 TilemapPos2Position(Vector2Int gridPosition)//将Tilemap坐标转换为世界坐标
         {
-            throw new NotImplementedException();
+            Vector3 position = new Vector3(gridPosition.x * gridSize, 0, gridPosition.y * gridSize);//将Tilemap坐标转换为世界坐标用了X轴和Z轴
+            return position;
         }
-        public Vector2Int Position2TilemapPos(Vector3 position)
+        public Vector2Int Position2TilemapPos(Vector3 position)//将世界坐标转换为Tilemap坐标
         {
             int gridX = Mathf.FloorToInt(position.x / gridSize);
             int gridY = Mathf.FloorToInt(position.y / gridSize);

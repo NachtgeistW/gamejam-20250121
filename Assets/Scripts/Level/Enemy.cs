@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor.Experimental.GraphView;
@@ -21,7 +22,7 @@ namespace Level
         [field: SerializeField] public State State { get; private set; }
         [field: SerializeField] public float Speed { get; private set; }
 
-        [field: SerializeField] public Sprite Sprite { get; private set; }
+        //[field: SerializeField] public Sprite Sprite { get; private set; }
         public Animator animator { get; private set; }
         public MapTile maptile { get; private set; }//地块地图
         public Player targetPlayer { get; private set; }
@@ -62,27 +63,17 @@ namespace Level
         private void OnCatchPlayer(Player player)
         {
             //animator.Play("CatchPlayer");
-            FindPath(Position,player.getPosition());//寻路
             
+            MoveEnemy();
 
-            //throw new System.NotImplementedException();
         }
 
-        
-        void MoveEnemy()
-        {
-            Vector2Int startPos =maptile .Position2TilemapPos(transform.position);
-            Vector2Int targetPos = maptile.Position2TilemapPos(new Vector3(20,20,0));
-
-            path = this.FindPath(startPos, targetPos);
-        }
-        
         
         //A*算法寻路
         public List<Vector2Int> FindPath(Vector2Int start, Vector2Int target)
         {
             List<Node> openList = new List<Node>();//列表存放待搜索的节点
-            HashSet<Vector2Int> closedList = new HashSet<Vector2Int>();
+            HashSet<Vector2Int> closedList = new HashSet<Vector2Int>();//已搜索的节点
 
             Node startNode = new Node(start, null, 0, Heuristic(start, target));//起始节点
             openList.Add(startNode);
@@ -157,8 +148,34 @@ namespace Level
             path.Reverse();
             return path;
         }
+        void MoveEnemy()
+        {
+            Vector2Int startPos = maptile.Position2TilemapPos(transform.position);
+            Vector2Int targetPos = maptile.Position2TilemapPos(new Vector3(20, 20, 0));//随便给一个初始的测试位置
 
+            path = this.FindPath(startPos, targetPos);//寻路
+            currentPathIndex = 0;
+            if (path != null)
+            {
+                StartCoroutine(FollowPath());
+            }
+        }
+        IEnumerator FollowPath()
+        {
+            while (currentPathIndex < path.Count)
+            {
+                Vector3 targetPosition = maptile.TilemapPos2Position(path[currentPathIndex]);//获取下一个目标位置
+                transform.position = Vector3.MoveTowards(transform.position, targetPosition, Speed * Time.deltaTime);//移动到目标位置移动方式修改在这
+                if (transform.position == targetPosition)//到达目标位置
+                {
+                    currentPathIndex++;
+                }
+                yield return null;
+            }
+
+        }
     }
+
 
     class Node
     {

@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Plutono.Util;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static Level.GameEvent;
 
 namespace Level
 {
@@ -42,11 +44,16 @@ namespace Level
                         if (hit.collider == col)
                         {
                             walls.Add(col.gameObject);
-                            //cast put walls list to delight
+                            
+                            
+
                         }
+                        
                     }
                 }
             }
+            //cast put walls list to delight
+            EventCenter.Broadcast(new WaveHitWallEvent { hittedWalls = walls });
             //throw new System.NotImplementedException();
         }
     }
