@@ -136,6 +136,8 @@ MonoBehaviour:
   <Position>k__BackingField: {x: 0, y: 0}
   <InputX>k__BackingField: 0
   <InputY>k__BackingField: 0
+  Grid: {fileID: 0}
+  Cam: {fileID: 0}
 --- !u!58 &110328231059097478
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -244,10 +246,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <Position>k__BackingField: {x: 0, y: 0}
-  <Sprite>k__BackingField: {fileID: 21300000, guid: 2b3b162fe27dd1e46b6709eb56718dac, type: 3}
-  Angle: 90
-  distance: 25
+  angle: 120
+  distance: 2
   rotatePerSecond: 90
+  sprite: {fileID: 21300000, guid: 2b3b162fe27dd1e46b6709eb56718dac, type: 3}
 --- !u!212 &3181233384017284308
 SpriteRenderer:
   m_ObjectHideFlags: 0

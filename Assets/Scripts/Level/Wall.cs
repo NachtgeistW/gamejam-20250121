@@ -19,16 +19,11 @@ namespace Assets.Scripts.Level
 
         private void OnWaveHitWall(WaveHitWallEvent e)
         {
-            foreach (var wall in e.hittedWalls)
-            {
-                StartCoroutine(Delight());
-            }
         }
 
-        private IEnumerator Delight()
+        private void Start()
         {
-            throw new System.NotImplementedException();
-            yield return new WaitForSeconds(0.5f);
+
         }
     }
 }

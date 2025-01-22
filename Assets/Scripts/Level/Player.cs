@@ -97,7 +97,7 @@ namespace Level
         //发射电波
         private void SendOutRadioWaves()
         {
-            if (Input.GetKeyDown(KeyCode.Space)) Debug.Log("发射电波");
+            //if (Input.GetKeyDown(KeyCode.Space)) Debug.Log("发射电波");
         }
 
         private void OnGameOver(GameEvent.GameOverEvent evt)
