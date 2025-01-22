@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
+sing System.Runtime.CompilerServices;
 using Plutono.Util;
 using UnityEngine;
 using UnityEngine.Tilemaps;

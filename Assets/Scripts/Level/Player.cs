@@ -1,10 +1,8 @@
-﻿using Plutono.Util;
+using Plutono.Util;
 using System.Collections;
 using UnityEngine;
 
 namespace Level
-{
-    //[RequireComponent(typeof(SpriteRenderer))]
     public class Player : MonoBehaviour
     {
         [field: SerializeField] public float Speed { get; private set; }

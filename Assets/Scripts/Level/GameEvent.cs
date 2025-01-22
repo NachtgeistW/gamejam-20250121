@@ -1,4 +1,4 @@
-﻿using Plutono.Util;
+using Plutono.Util;
 using System.Collections.Generic;
 using UnityEngine;
 
