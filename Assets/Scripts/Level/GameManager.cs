@@ -35,10 +35,7 @@ namespace Level
         private void OnGameOver(GameEvent.GameOverEvent evt)
         {
             IsGameOver = true;
-            if (evt.IsWin)
-            {
-
-            }
+            Debug.Log(evt.IsWin ? "You Win" : "You Lose...");
         }
 
         private void Start()
