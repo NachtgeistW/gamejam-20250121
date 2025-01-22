@@ -17,6 +17,9 @@ namespace Level
         public Player player;
         public List<Enemy> enemies;
 
+        public GameObject enemyPrefab;
+        public Transform enemiesTransform;
+
         public bool IsGameBegin { get; private set; } = false;
         public bool IsGameOver { get; private set; } = false;
 
@@ -42,7 +45,7 @@ namespace Level
         {
             //map = InitMap();
             InitPlayer();
-            //enemies = InitEnemies();
+            InitEnemies();
 
             IsGameBegin = true;
         }
@@ -63,9 +66,15 @@ namespace Level
             player.MovePlayerTo(new Vector2Int(start.girdX, start.girdY));
         }
 
-        private List<Enemy> InitEnemies()
+        private void InitEnemies()
         {
-            throw new NotImplementedException();
+            var enemyTileDetails = GridMapManager.Instance.GetTileDetailsList(MapTileType.Enemy);
+
+            foreach (var enemyTileDetail in enemyTileDetails)
+            {
+                var enemy = Instantiate(enemyPrefab, enemiesTransform).GetComponent<Enemy>();
+                enemy.MoveTo(new Vector2Int(enemyTileDetail.girdX, enemyTileDetail.girdY));
+            }
         }
     }
 }

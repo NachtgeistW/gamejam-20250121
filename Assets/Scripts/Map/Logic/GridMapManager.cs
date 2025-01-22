@@ -71,6 +71,9 @@ public class GridMapManager : Singleton<GridMapManager>
                 case MapTileType.EnemyObstacle:
                     tileDetails.isEnemyObstacle = true;
                     break;
+                case MapTileType.Enemy:
+                    tileDetails.isEnemy = true;
+                    break;
                 case MapTileType.Start:
                     tileDetails.isStart = true;
                     break;

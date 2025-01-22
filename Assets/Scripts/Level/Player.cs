@@ -36,7 +36,7 @@ namespace Level
 
         private void Start()
         {
-            //grid = FindObjectOfType<Grid>();
+            
             Cam = Camera.main;
         }
 
@@ -123,9 +123,13 @@ namespace Level
         /// <param name="position">要移动的位置</param>
         public void MovePlayerTo(Vector2Int position)
         {
-            var cellSize = Grid.cellSize.x;
-            var worldPos = Grid.CellToWorld(new Vector3Int(position.x, position.y));
-            transform.position = new Vector3(worldPos.x + cellSize / 2, worldPos.y + cellSize / 2, transform.position.z);
+            if (Grid == null)
+            {
+                Grid = FindObjectOfType<Grid>();
+            }
+
+            var worldPos = Grid.GetCellCenterWorld(new Vector3Int(position.x, position.y));
+            transform.position = new Vector3(worldPos.x, worldPos.y, transform.position.z);
         }
     }
 }
