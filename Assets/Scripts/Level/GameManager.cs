@@ -16,9 +16,9 @@ namespace Level
 
         private void Start()
         {
-            map = InitMap();
-            player = InitPlayer();
-            enemies = InitEnemies();
+            //map = InitMap();
+            //player = InitPlayer();
+            //enemies = InitEnemies();
         }
 
         private Map InitMap()
