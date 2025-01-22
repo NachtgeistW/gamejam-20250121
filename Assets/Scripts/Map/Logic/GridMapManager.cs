@@ -18,6 +18,7 @@ public class TileDetails
     public bool isWall;
     public bool isRoad;
     public bool isEnemyObstacle;
+    public bool isEnemy;
     public bool isDoor;
 }
 
@@ -138,6 +139,10 @@ public class GridMapManager : Singleton<GridMapManager>
                     break;
                 case MapTileType.EnemyObstacle:
                     if (tileDetails.Value.isEnemyObstacle)
+                        res.Add(tileDetails.Value);
+                    break;
+                case MapTileType.Enemy:
+                    if (tileDetails.Value.isEnemy)
                         res.Add(tileDetails.Value);
                     break;
                 default:

@@ -12,5 +12,6 @@ namespace Level
         Road,
         Door,
         EnemyObstacle,
+        Enemy,
     }
 }
