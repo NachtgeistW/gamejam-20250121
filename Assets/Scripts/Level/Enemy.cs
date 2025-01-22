@@ -1,13 +1,7 @@
 ﻿using Plutono.Util;
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.Tilemaps;
-using static UnityEngine.RuleTile.TilingRuleOutput;
 
 namespace Level
 {
@@ -141,25 +135,6 @@ namespace Level
                 EnemyState.Patrolling => EnemyState.Chasing,
                 _ => currentState
             };
-        }
-
-        // 用于在 Scene 视图中显示巡逻路径
-        private void OnDrawGizmos()
-        {
-            if (patrolPoints is { Count: > 0 })
-            {
-                Gizmos.color = Color.yellow;
-                for (int i = 0; i < patrolPoints.Count; i++)
-                {
-                    Vector3 pos = GridToWorld(patrolPoints[i]);
-                    Gizmos.DrawWireSphere(pos, 0.3f);
-                    if (i < patrolPoints.Count - 1)
-                    {
-                        Vector3 nextPos = GridToWorld(patrolPoints[i + 1]);
-                        Gizmos.DrawLine(pos, nextPos);
-                    }
-                }
-            }
         }
 
         /// <summary>
