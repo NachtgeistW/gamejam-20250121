@@ -41,3 +41,12 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Map
+    uniqueID: 532611733
+    locked: 0
+  - name: Instance
+    uniqueID: 720877969
+    locked: 0
+  - name: Collision
+    uniqueID: 1994066347
+    locked: 0
