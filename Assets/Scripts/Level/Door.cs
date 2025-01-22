@@ -12,6 +12,9 @@ namespace Assets.Scripts.Level
 
         private void OnTriggerEnter2D(Collider2D col)
         {
+            if (!GameManager.Instance.IsGameBegin) return;
+            if (!col.CompareTag("Player")) return;
+
             Debug.Log("Door collided with " + col.name);
             EventCenter.Broadcast(new GameEvent.GameOverEvent { IsWin = true });
         }

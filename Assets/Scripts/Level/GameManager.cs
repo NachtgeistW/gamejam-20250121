@@ -17,6 +17,7 @@ namespace Level
         public Player player;
         public List<Enemy> enemies;
 
+        public bool IsGameBegin { get; private set; } = false;
         public bool IsGameOver { get; private set; } = false;
 
         private void OnEnable()
@@ -42,6 +43,8 @@ namespace Level
             //map = InitMap();
             InitPlayer();
             //enemies = InitEnemies();
+
+            IsGameBegin = true;
         }
 
         private Map InitMap()
