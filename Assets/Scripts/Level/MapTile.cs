@@ -12,9 +12,13 @@ namespace Level
         [field: SerializeField] public MapTileType Type { get; private set; }
         [field: SerializeField] public float Brightness { get; private set; }
         [field: SerializeField] public Vector2 Position { get; private set; }
-        public Dictionary<Vector2Int, TileProperty> tiles = new Dictionary<Vector2Int, TileProperty>();//地图块的坐标和对应的Tile对象
+        public Dictionary<Vector2Int, Tile> tiles = new Dictionary<Vector2Int, Tile>();//地图块的坐标和对应的Tile对象
         public float gridSize = 1f;
         
+        private void Start()
+        {
+            //TilemapPos2Position();
+        }
 
         public Vector3 TilemapPos2Position(Vector2Int gridPosition)//将Tilemap坐标转换为世界坐标
         {
@@ -28,7 +32,7 @@ namespace Level
             return new Vector2Int(gridX, gridY);
         }
         //根据坐标获取Tile对象
-        public TileProperty GetTile(Vector2Int gridPosition)
+        public Tile GetTile(Vector2Int gridPosition)
         {
             if (tiles.ContainsKey(gridPosition))
             {
@@ -39,16 +43,21 @@ namespace Level
     }
     //字典来存储Tile对象
 
-    [Serializable]
-    public class TileProperty
+    public class Tile
     {
         public Vector2Int gridPosition;
         public MapTileType type;
-        
-        public TileProperty(Vector2Int gridPosition, MapTileType type)
+        public Tile(Vector2Int gridPosition, MapTileType type)
         {
             this.gridPosition = gridPosition;
             this.type = type;
         }
+    }
+    public enum MapTileType
+    {
+        empty,
+        Wall,
+        Road,
+        Door
     }
 }
