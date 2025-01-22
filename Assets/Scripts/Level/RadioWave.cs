@@ -84,7 +84,9 @@ namespace Level
                                 // 可以通过修改瓦片的颜色或者替换瓦片来实现显示效果
                                 wallTilemap.SetTileFlags(checkPos, TileFlags.None);
                                 wallTilemap.SetColor(checkPos, Color.white); // 显示瓦片
-
+                                
+                                //TODO:修复要等到前一个协程结束才能开始下一个协程的问题
+                                //StopCoroutine(FadeOutTile(checkPos));
                                 // 可以启动协程来处理瓦片的淡出效果
                                 StartCoroutine(FadeOutTile(checkPos));
                             }
@@ -96,13 +98,14 @@ namespace Level
 
         private IEnumerator FadeOutTile(Vector3Int tilePosition)
         {
-            float duration = 2.0f; // 淡入持续时间
-            float elapsed = 0;
+            const float duration = 2.0f; // 淡入持续时间
+            var elapsed = 0f;
 
+            //wallTilemap.SetColor(tilePosition, Color.white);
             while (elapsed < duration)
             {
                 elapsed += Time.deltaTime;
-                float alpha = 1 - (elapsed / duration);
+                var alpha = 1 - (elapsed / duration);
 
                 // 设置瓦片的透明度
                 wallTilemap.SetColor(tilePosition, new Color(1, 1, 1, alpha));
