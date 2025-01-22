@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Plutono.Util;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -22,11 +23,11 @@ namespace Level
     {
         public Grid Grid;
 
-        [SerializeField] private float patrolSpeed = 2f;    // 巡逻速度
-        [SerializeField] private float chaseSpeed = 4f;     // 追击速度
+        [SerializeField] private float patrolSpeed = 1f;    // 巡逻速度
+        [SerializeField] private float chaseSpeed = 2f;     // 追击速度
         [SerializeField] private float catchDistance = 0.5f; // 捕获玩家的距离
 
-        [SerializeField] EnemyState currentState = EnemyState.Hidden;
+        [SerializeField] private EnemyState currentState = EnemyState.Hidden;
         [SerializeField] SpriteRenderer spriteRenderer;
         private List<Vector2Int> patrolPoints;
         private int currentPatrolIndex = 0;
@@ -77,7 +78,7 @@ namespace Level
                     break;
 
                 case EnemyState.Chasing:
-                    //ChaseBehavior();
+                    ChaseBehavior();
                     break;
             }
         }
@@ -99,6 +100,57 @@ namespace Level
             {
                 // 移动到下一个巡逻点
                 currentPatrolIndex = (currentPatrolIndex + 1) % patrolPoints.Count;
+            }
+        }
+
+        private void ChaseBehavior()
+        {
+            Vector3 playerPosition = player.transform.position;
+            Vector3 moveDirection = (playerPosition - transform.position).normalized;
+
+            // 移动向玩家
+            transform.position = Vector3.MoveTowards(
+                transform.position,
+                playerPosition,
+                chaseSpeed * Time.deltaTime
+            );
+
+            // 检查是否抓到玩家
+            if (Vector3.Distance(transform.position, playerPosition) < catchDistance)
+            {
+                EventCenter.Broadcast(new GameEvent.GameOverEvent { IsWin = false });
+            }
+        }
+
+        // 被雷达波检测到时调用
+        public void OnDetected()
+        {
+            SetVisibility(true);
+
+            currentState = currentState switch
+            {
+                EnemyState.Hidden => EnemyState.Patrolling,
+                EnemyState.Patrolling => EnemyState.Chasing,
+                _ => currentState
+            };
+        }
+
+        // 用于在 Scene 视图中显示巡逻路径
+        private void OnDrawGizmos()
+        {
+            if (patrolPoints is { Count: > 0 })
+            {
+                Gizmos.color = Color.yellow;
+                for (int i = 0; i < patrolPoints.Count; i++)
+                {
+                    Vector3 pos = GridToWorld(patrolPoints[i]);
+                    Gizmos.DrawWireSphere(pos, 0.3f);
+                    if (i < patrolPoints.Count - 1)
+                    {
+                        Vector3 nextPos = GridToWorld(patrolPoints[i + 1]);
+                        Gizmos.DrawLine(pos, nextPos);
+                    }
+                }
             }
         }
 

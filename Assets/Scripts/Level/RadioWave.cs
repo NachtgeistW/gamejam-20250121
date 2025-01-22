@@ -94,6 +94,30 @@ namespace Level
                     }
                 }
             }
+
+            // 检测敌人
+            RaycastHit2D[] hits = Physics2D.CircleCastAll(
+                transform.position,
+                distance,
+                transform.right,
+                0f
+            );
+
+            foreach (var hit in hits)
+            {
+                Enemy enemy = hit.collider.GetComponent<Enemy>();
+                if (enemy != null)
+                {
+                    // 检查是否在扇形范围内
+                    Vector2 directionToEnemy = (hit.collider.transform.position - transform.position).normalized;
+                    float angleToEnemy = Vector2.Angle(transform.right, directionToEnemy);
+
+                    if (angleToEnemy <= angle / 2)
+                    {
+                        enemy.OnDetected();
+                    }
+                }
+            }
         }
 
         private IEnumerator FadeOutTile(Vector3Int tilePosition)

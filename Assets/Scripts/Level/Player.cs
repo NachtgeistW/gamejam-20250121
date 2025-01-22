@@ -106,7 +106,7 @@ namespace Level
 
             if (!evt.IsWin)
             {
-                Destroy(gameObject);
+                
             }
         }
 
