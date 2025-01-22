@@ -823,10 +823,6 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 2192067458011040548, guid: b37a0263f21c29e40946b769f73d3109, type: 3}
-      propertyPath: distance
-      value: 25
-      objectReference: {fileID: 0}
-    - target: {fileID: 2192067458011040548, guid: b37a0263f21c29e40946b769f73d3109, type: 3}
       propertyPath: rayCount
       value: 8
       objectReference: {fileID: 0}
@@ -1584,6 +1580,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1786590451}
+  - component: {fileID: 1786590455}
   - component: {fileID: 1786590453}
   - component: {fileID: 1786590452}
   - component: {fileID: 1786590454}
@@ -2078,7 +2075,7 @@ Tilemap:
     m_Data: {r: 1, g: 1, b: 1, a: 1}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
-  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Origin: {x: -4, y: -4, z: 0}
   m_Size: {x: 8, y: 8, z: 1}
   m_TileAnchor: {x: 0.5, y: 0.5, z: 0}
@@ -2136,6 +2133,20 @@ TilemapCollider2D:
   m_MaximumTileChangeCount: 1000
   m_ExtrusionFactor: 0
   m_UseDelaunayMesh: 0
+--- !u!114 &1786590455
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1786590450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dabdbd616c70d342a69ac66cd3d0ed4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wallTilemap: {fileID: 1786590453}
+  wallRenderer: {fileID: 1786590452}
 --- !u!1 &1845906243
 GameObject:
   m_ObjectHideFlags: 0
