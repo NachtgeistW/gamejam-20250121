@@ -98,7 +98,7 @@ GameObject:
   - component: {fileID: 5336445354961915759}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -243,8 +243,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3a37eccd21e484887c8cefa43a239a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <WPosition>k__BackingField: {x: 0, y: 0}
+  <Position>k__BackingField: {x: 0, y: 0}
   <Sprite>k__BackingField: {fileID: 21300000, guid: 2b3b162fe27dd1e46b6709eb56718dac, type: 3}
+  Angle: 90
+  distance: 25
+  rotatePerSecond: 90
 --- !u!212 &3181233384017284308
 SpriteRenderer:
   m_ObjectHideFlags: 0

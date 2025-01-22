@@ -19,12 +19,17 @@ namespace Level
         private bool isCollision = false;
         private float templine = 0.3f;
 
+        public Grid grid;
+        public Camera cam;
+
         private Rigidbody2D rb2d;
 
-        //[field: SerializeField] public Sprite Sprite { get; private set; }
         private void Start()
         {
             StartCoroutine(Move());
+            
+            //grid = FindObjectOfType<Grid>();
+            cam = Camera.main;
         }
 
         private void Update()
@@ -36,25 +41,11 @@ namespace Level
         {
             while (gameover == false)
             {
-                //InputX = Input.GetAxisRaw("Horizontal");
-                //InputY = Input.GetAxisRaw("Vertical");
-                //Vector2 movement = new Vector2(InputX, InputY);
-                //movement = movement.normalized;
-                //if (movement.magnitude > 0.1f)
-                //{
-                //    float angle = Mathf.Atan2(movement.y, movement.x) * Mathf.Rad2Deg;
-                //    Quaternion rotation = Quaternion.Euler(0, 0, angle);
-                //    transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * 5f);
-
-                //    transform.Translate(movement * Speed * Time.deltaTime, Space.World);
-                //}
-
                 InputX = Input.GetAxisRaw("Horizontal"); //rotation
                 transform.Rotate(0, 0, -InputX * rotationspeed * Time.deltaTime);
 
                 if (isCollision == false)
                 {
-                    Debug.Log("not isCollision");
                     InputY = Input.GetAxisRaw("Vertical"); //movement
                     transform.Translate(InputY * Speed * Time.deltaTime, 0, 0, Space.Self);
                     var hit = Physics2D.Raycast(transform.position, Vector2.right, templine, LayerMask.GetMask("Wall"));
@@ -67,10 +58,18 @@ namespace Level
                     if (hit.collider == null) isCollision = false;
                 }
 
+                UpdatePosition();
+                
                 yield return null;
             }
 
             yield return null;
+        }
+
+        private void UpdatePosition()
+        {
+            var pos = grid.WorldToCell(transform.position);
+            Position = new Vector2Int(pos.x, pos.y);
         }
         //玩家移动
 
@@ -89,9 +88,11 @@ namespace Level
         }
 
         //获取玩家在地图上面的位置
-        public Vector2Int getPosition()
+        public Vector2Int GetPosition()
         {
-            return new Vector2Int((int)transform.position.x, (int)transform.position.y);
+            var pos = grid.WorldToCell(transform.position);
+            Position = new Vector2Int(pos.x, pos.y);
+            return new Vector2Int(pos.x, pos.y);
         }
     }
 }
