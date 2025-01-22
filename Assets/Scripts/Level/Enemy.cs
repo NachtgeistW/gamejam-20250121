@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -9,175 +10,97 @@ using static UnityEngine.RuleTile.TilingRuleOutput;
 
 namespace Level
 {
-    public enum State
+    public enum EnemyState
     {
-        Stay,
-        Move,
-        CatchPlayer
+        Hidden,     // 初始状态：隐藏且静止
+        Patrolling, // 被发现后开始巡逻
+        Chasing     // 第二次被发现后追击玩家
     }
 
     [RequireComponent(typeof(SpriteRenderer))]
     public class Enemy : MonoBehaviour
     {
-        [field: SerializeField] public Vector2Int Position { get; private set; } // Position of the enemy on the map
-        [field: SerializeField] public State State { get; private set; }
-        [field: SerializeField] public float Speed { get; private set; }
-
-        //[field: SerializeField] public Sprite Sprite { get; private set; }
-        public Animator animator { get; private set; }
-        public MapTile maptile { get; private set; } //地块地图
-        public Player targetPlayer { get; private set; }
-
-        private List<Vector2Int> path;
-        private int currentPathIndex;
-
         public Grid Grid;
 
-        //private void Update()
-        //{
-        //    switch (State)
-        //    {
-        //        case State.Move:
-        //            OnMove();
-        //            break;
-        //        case State.CatchPlayer:
-        //            OnCatchPlayer(targetPlayer);
-        //            break;
-        //        case State.Stay:
-        //        default:
-        //            OnStay();
-        //            break;
+        [SerializeField] private float patrolSpeed = 2f;    // 巡逻速度
+        [SerializeField] private float chaseSpeed = 4f;     // 追击速度
+        [SerializeField] private float catchDistance = 0.5f; // 捕获玩家的距离
 
-        //    }
-        //}
+        [SerializeField] EnemyState currentState = EnemyState.Hidden;
+        [SerializeField] SpriteRenderer spriteRenderer;
+        private List<Vector2Int> patrolPoints;
+        private int currentPatrolIndex = 0;
+        private Grid grid;
+        private Player player;
+        private Vector2Int currentGridPosition;
 
-        //private void OnStay()
-        //{
-        //    animator.Play("Stay");
-        //    //throw new System.NotImplementedException();
-        //}
+        private void Start()
+        {
+            grid = FindObjectOfType<Grid>();
+            player = FindObjectOfType<Player>();
 
-        //private void OnMove()
-        //{
-        //    animator.Play("Move");
-        //    //throw new System.NotImplementedException();
-        //}
+            // 获取所有巡逻点
+            patrolPoints = GridMapManager.Instance.GetTileDetailsList(MapTileType.EnemyObstacle)
+                .Select(tile => new Vector2Int(tile.girdX, tile.girdY))
+                .ToList();
 
-        //private void OnCatchPlayer(Player player)
-        //{
-        //    //animator.Play("CatchPlayer");
+            // 设置初始位置为第一个巡逻点
+            currentGridPosition = patrolPoints[0];
+            transform.position = GridToWorld(currentGridPosition);
 
-        //    MoveEnemy();
+            // 初始状态：隐藏
+            SetVisibility(false);
+        }
 
-        //}
+        private void SetVisibility(bool visible)
+        {
+            spriteRenderer.color = visible ? Color.white : Color.clear;
+        }
 
+        private Vector3 GridToWorld(Vector2Int gridPosition)
+        {
+            var cellSize = grid.cellSize.x;
+            var worldPos = grid.CellToWorld(new Vector3Int(gridPosition.x, gridPosition.y, 0));
+            return new Vector3(worldPos.x + cellSize / 2, worldPos.y + cellSize / 2, 0);
+        }
 
-        ////A*算法寻路
-        //public List<Vector2Int> FindPath(Vector2Int start, Vector2Int target)
-        //{
-        //    List<Node> openList = new List<Node>();//列表存放待搜索的节点
-        //    HashSet<Vector2Int> closedList = new HashSet<Vector2Int>();//已搜索的节点
+        private void Update()
+        {
+            switch (currentState)
+            {
+                case EnemyState.Hidden:
+                    // 不做任何事
+                    break;
 
-        //    Node startNode = new Node(start, null, 0, Heuristic(start, target));//起始节点
-        //    openList.Add(startNode);
-        //    while (openList.Count > 0)
-        //    {
-        //        Node currentNode = openList[0];
-        //        for (int i = 1; i < openList.Count; i++)
-        //        {
-        //            if (openList[i].F < currentNode.F)
-        //            {
-        //                currentNode = openList[i];
-        //            }
-        //        }
+                case EnemyState.Patrolling:
+                    PatrolBehavior();
+                    break;
 
-        //        openList.Remove(currentNode);
-        //        closedList.Add(currentNode.position);
+                case EnemyState.Chasing:
+                    //ChaseBehavior();
+                    break;
+            }
+        }
 
-        //        if (currentNode.position == target)
-        //        {
-        //            return BuildPath(currentNode);//逐个构建节点
-        //        }//如果找到目标节点，则返回路径
+        private void PatrolBehavior()
+        {
+            Vector3 targetPosition = GridToWorld(patrolPoints[currentPatrolIndex]);
+            Vector3 moveDirection = (targetPosition - transform.position).normalized;
 
-        //        foreach (var neighbor in GetNeighbors(currentNode.position))//bfs遍历周围节点
-        //        {
-        //            if (closedList.Contains(neighbor) || maptile.GetTile(neighbor).type == MapTileType.Wall)
-        //            {
-        //                continue;
-        //            }
-        //            float gCost = currentNode.gCost + 1;
-        //            Node neighborNode = openList.Find(n => n.position == neighbor);//查找节点是否已经在openList中
-        //            if (neighborNode == null || gCost < neighborNode.gCost)//如果节点不存在或g值更小
-        //            {
-        //                if (neighborNode != null)
-        //                {
-        //                    neighborNode = new Node(neighbor, currentNode, gCost, Heuristic(neighbor, target));
-        //                    openList.Add(neighborNode);
-        //                }
-        //                else
-        //                {
-        //                    neighborNode.parent = currentNode;
-        //                    neighborNode.gCost = gCost;
-        //                }
-        //            }
-        //        }
-        //    }
-        //    return null;
-        //}
-        //private List<Vector2Int> GetNeighbors(Vector2Int position)
-        //{
-        //    List<Vector2Int> neighbors = new List<Vector2Int>
-        //        {
-        //            new Vector2Int(position.x+1, position.y),
-        //            new Vector2Int(position.x-1, position.y),
-        //            new Vector2Int(position.x, position.y+1),
-        //            new Vector2Int(position.x, position.y-1)
-        //        };
-        //    return neighbors;
+            // 移动
+            transform.position = Vector3.MoveTowards(
+                transform.position,
+                targetPosition,
+                patrolSpeed * Time.deltaTime
+            );
 
-        //}
-        //private float Heuristic(Vector2Int a, Vector2Int b)//启发函数
-        //{
-        //    return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y);
-        //}
-        //private List<Vector2Int> BuildPath(Node node)
-        //{
-        //    List<Vector2Int> path = new List<Vector2Int>();
-        //    while (node != null)
-        //    {
-        //        path.Add(node.position);
-        //        node = node.parent;
-        //    }
-        //    path.Reverse();
-        //    return path;
-        //}
-        //void MoveEnemy()
-        //{
-        //    Vector2Int startPos = maptile.Position2TilemapPos(transform.position);
-        //    Vector2Int targetPos = maptile.Position2TilemapPos(new Vector3(20, 20, 0));//随便给一个初始的测试位置
-
-        //    path = this.FindPath(startPos, targetPos);//寻路
-        //    currentPathIndex = 0;
-        //    if (path != null)
-        //    {
-        //        StartCoroutine(FollowPath());
-        //    }
-        //}
-        //IEnumerator FollowPath()
-        //{
-        //    while (currentPathIndex < path.Count)
-        //    {
-        //        Vector3 targetPosition = maptile.TilemapPos2Position(path[currentPathIndex]);//获取下一个目标位置
-        //        transform.position = Vector3.MoveTowards(transform.position, targetPosition, Speed * Time.deltaTime);//移动到目标位置移动方式修改在这
-        //        if (transform.position == targetPosition)//到达目标位置
-        //        {
-        //            currentPathIndex++;
-        //        }
-        //        yield return null;
-        //    }
-
-        //}
-
+            // 检查是否到达目标点
+            if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
+            {
+                // 移动到下一个巡逻点
+                currentPatrolIndex = (currentPatrolIndex + 1) % patrolPoints.Count;
+            }
+        }
 
         /// <summary>
         /// 将敌人的位置移动到指定瓦片地图的正中心
@@ -192,25 +115,6 @@ namespace Level
 
             var worldPos = Grid.GetCellCenterWorld(new Vector3Int(position.x, position.y));
             transform.position = new Vector3(worldPos.x, worldPos.y, transform.position.z);
-        }
-    }
-
-
-    class Node
-    {
-        public Vector2Int position;//节点位置
-        public Node parent;
-        public float gCost;
-        public float hCost;
-
-        public float F => gCost + hCost;
-
-        public Node(Vector2Int position, Node parent, float gCost, float hCost)
-        {
-            this.position = position;
-            this.parent = parent;
-            this.gCost = gCost;
-            this.hCost = hCost;
         }
     }
 }
