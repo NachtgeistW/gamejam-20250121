@@ -3,7 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using Level;
 using Map.Data;
+using Plutono.Util;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [System.Serializable]
 public class TileDetails
@@ -17,10 +19,11 @@ public class TileDetails
     public bool isDoor;
 }
 
-public class GridMapManager : MonoBehaviour
+public class GridMapManager : Singleton<GridMapManager>
 {
-    [Header("地图信息")] public List<MapData_SO> mapDataList;
-
+    [Header("地图信息")] 
+    
+    public List<MapData_SO> mapDataList;
     //场景名字、坐标与对应的瓦片信息
     private readonly Dictionary<string, TileDetails> tileDetailsDict = new();
 
@@ -31,8 +34,7 @@ public class GridMapManager : MonoBehaviour
             InitTileDetailsDict(data);
         }
     }
-
-
+    
     private void InitTileDetailsDict(MapData_SO mapData)
     {
         foreach (var tileProperty in mapData.tileProperties)
@@ -89,5 +91,16 @@ public class GridMapManager : MonoBehaviour
     private TileDetails GetTileDetails(string key)
     {
         return tileDetailsDict.ContainsKey(key) ? tileDetailsDict[key] : null;
+    }
+    
+    /// <summary>
+    /// 根据坐标返回瓦片信息
+    /// </summary>
+    /// <param name="pos">当前瓦片的坐标</param>
+    /// <returns></returns>
+    public TileDetails GetTileDetails(Vector2Int pos)
+    {
+        var key = $"{pos.x}x{pos.y}y{SceneManager.GetActiveScene().name}";
+        return tileDetailsDict[key];
     }
 }

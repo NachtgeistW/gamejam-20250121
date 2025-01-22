@@ -15,10 +15,6 @@ namespace Level
         public Dictionary<Vector2Int, TileProperty> tiles = new Dictionary<Vector2Int, TileProperty>();//地图块的坐标和对应的Tile对象
         public float gridSize = 1f;
         
-        private void Start()
-        {
-            //TilemapPos2Position();
-        }
 
         public Vector3 TilemapPos2Position(Vector2Int gridPosition)//将Tilemap坐标转换为世界坐标
         {
