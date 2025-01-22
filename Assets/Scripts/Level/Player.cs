@@ -95,7 +95,11 @@ namespace Level
             return new Vector2Int(pos.x, pos.y);
         }
 
-        public void SetPositionTo(Vector2Int position)
+        /// <summary>
+        /// 将玩家的位置移动到指定位置
+        /// </summary>
+        /// <param name="position">要移动的位置</param>
+        public void MovePlayerTo(Vector2Int position)
         {
             var cellSize = grid.cellSize.x;
             var worldPos = grid.CellToWorld(new Vector3Int(position.x, position.y));

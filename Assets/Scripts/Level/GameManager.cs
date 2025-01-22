@@ -36,7 +36,7 @@ namespace Level
             player = FindObjectOfType<Player>();
 
             var start = GridMapManager.Instance.GetTileDetailsList(MapTileType.Start)[0];
-            player.SetPositionTo(new Vector2Int(start.girdX, start.girdY));
+            player.MovePlayerTo(new Vector2Int(start.girdX, start.girdY));
         }
 
         private List<Enemy> InitEnemies()
