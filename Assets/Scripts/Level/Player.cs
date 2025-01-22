@@ -94,5 +94,12 @@ namespace Level
             Position = new Vector2Int(pos.x, pos.y);
             return new Vector2Int(pos.x, pos.y);
         }
+
+        public void SetPositionTo(Vector2Int position)
+        {
+            var cellSize = grid.cellSize.x;
+            var worldPos = grid.CellToWorld(new Vector3Int(position.x, position.y));
+            transform.position = new Vector3(worldPos.x + cellSize / 2, worldPos.y + cellSize / 2, transform.position.z);
+        }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Plutono.Util;
+using UnityEngine;
+using UnityEngine.Tilemaps;
 
 namespace Level
 {
@@ -17,18 +19,24 @@ namespace Level
         private void Start()
         {
             //map = InitMap();
-            //player = InitPlayer();
+            InitPlayer();
             //enemies = InitEnemies();
         }
 
         private Map InitMap()
         {
-            throw new NotImplementedException();
+            var map = new Map();
+            
+            var tilemap = GetComponent<Tilemap>();
+            return map;
         }
 
-        private Player InitPlayer()
+        private void InitPlayer()
         {
-            throw new NotImplementedException();
+            player = FindObjectOfType<Player>();
+
+            var start = GridMapManager.Instance.GetTileDetailsList(MapTileType.Start)[0];
+            player.SetPositionTo(new Vector2Int(start.girdX, start.girdY));
         }
 
         private List<Enemy> InitEnemies()

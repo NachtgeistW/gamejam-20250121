@@ -7,6 +7,7 @@ namespace Level
     public enum MapTileType
     {
         Empty,
+        Start,
         Wall,
         Road,
         Door,

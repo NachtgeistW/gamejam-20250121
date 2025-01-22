@@ -310,7 +310,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mapData: {fileID: 11400000, guid: 8beff13379d18024a830f896e5d5f7e3, type: 2}
-  gridType: 4
+  gridType: 5
 --- !u!1 &172560094
 GameObject:
   m_ObjectHideFlags: 0
@@ -322,7 +322,7 @@ GameObject:
   - component: {fileID: 172560096}
   - component: {fileID: 172560095}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: GameManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -452,7 +452,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mapData: {fileID: 11400000, guid: 8beff13379d18024a830f896e5d5f7e3, type: 2}
-  gridType: 2
+  gridType: 3
 --- !u!483693784 &328859801
 TilemapRenderer:
   m_ObjectHideFlags: 0
@@ -1430,7 +1430,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mapData: {fileID: 11400000, guid: 8beff13379d18024a830f896e5d5f7e3, type: 2}
-  gridType: 1
+  gridType: 2
 --- !u!1 &994089083
 GameObject:
   m_ObjectHideFlags: 0
@@ -2176,7 +2176,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mapData: {fileID: 11400000, guid: 8beff13379d18024a830f896e5d5f7e3, type: 2}
-  gridType: 3
+  gridType: 1
 --- !u!483693784 &2107066284
 TilemapRenderer:
   m_ObjectHideFlags: 0
@@ -2345,7 +2345,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mapData: {fileID: 11400000, guid: 8beff13379d18024a830f896e5d5f7e3, type: 2}
-  gridType: 3
+  gridType: 4
 --- !u!483693784 &2126082389
 TilemapRenderer:
   m_ObjectHideFlags: 0
@@ -2482,7 +2482,7 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1476127581}
+  - {fileID: 172560096}
   - {fileID: 1845906244}
   - {fileID: 421240934}
   - {fileID: 230257736}
-  - {fileID: 172560096}
