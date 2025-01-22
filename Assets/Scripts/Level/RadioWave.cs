@@ -6,7 +6,7 @@ using static Level.GameEvent;
 
 namespace Level
 {
-    //[RequireComponent(typeof(SpriteRenderer))]
+    [RequireComponent(typeof(SpriteRenderer))]
     public class RadioWave : MonoBehaviour
     {
         [field: SerializeField] public Vector2 WPosition { get; set; }
