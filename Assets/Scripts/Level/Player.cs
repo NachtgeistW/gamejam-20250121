@@ -39,5 +39,11 @@ namespace Level
                 throw new System.NotImplementedException();
             }
         }
+
+        //获取玩家在地图上面的位置
+        public Vector2Int getPosition()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
