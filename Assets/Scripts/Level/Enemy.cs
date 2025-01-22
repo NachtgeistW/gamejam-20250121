@@ -51,6 +51,12 @@ namespace Level
             currentGridPosition = patrolPoints[0];
             transform.position = GridToWorld(currentGridPosition);
 
+            Debug.Log($"Patrol points count: {patrolPoints.Count}");
+            foreach (var point in patrolPoints)
+            {
+                Debug.Log($"Patrol point: {point}");
+            }
+
             // 初始状态：隐藏
             SetVisibility(false);
         }
@@ -88,38 +94,40 @@ namespace Level
         private void PatrolBehavior()
         {
             Vector3 targetPosition = GridToWorld(patrolPoints[currentPatrolIndex]);
-            Vector3 moveDirection = (targetPosition - transform.position).normalized;
+            Rigidbody2D rb = GetComponent<Rigidbody2D>();
 
-            // 移动
-            transform.position = Vector3.MoveTowards(
-                transform.position,
-                targetPosition,
-                patrolSpeed * Time.deltaTime
-            );
+            float distanceToTarget = Vector2.Distance(transform.position, targetPosition);
 
-            // 检查是否到达目标点
-            if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
+            if (distanceToTarget < 0.1f)
             {
-                // 移动到下一个巡逻点
+                // 到达目标点，更新索引
                 currentPatrolIndex = (currentPatrolIndex + 1) % patrolPoints.Count;
+                // 确保物体停止
+                rb.velocity = Vector2.zero;
+            }
+            else
+            {
+                // 使用 MovePosition 而不是直接设置 velocity
+                Vector2 moveDirection = (targetPosition - transform.position).normalized;
+                Vector2 newPosition = rb.position + (moveDirection * patrolSpeed * Time.fixedDeltaTime);
+                rb.MovePosition(newPosition);
             }
         }
 
         private void ChaseBehavior()
         {
-            // 使用 OverlapCircle 检测是否接触到玩家，而不是用距离判断
-            var colliders = Physics2D.OverlapCircleAll(transform.position, catchDistance);
-            if (colliders.Any(collider => collider.CompareTag("Player")))
+            Vector3 playerPosition = player.transform.position;
+            Vector2 moveDirection = (playerPosition - transform.position).normalized;
+            Vector2 newPosition = rb.position + (moveDirection * chaseSpeed * Time.fixedDeltaTime);
+            rb.MovePosition(newPosition);
+        }
+
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            if (currentState == EnemyState.Chasing && other.CompareTag("Player"))
             {
                 EventCenter.Broadcast(new GameEvent.GameOverEvent { IsWin = false });
-                return; // 确保在触发游戏结束后不再移动
             }
-
-            // 获取到玩家的方向
-            var directionToPlayer = (player.transform.position - transform.position).normalized;
-
-            // 使用 Rigidbody2D 来移动，而不是直接设置位置
-            rb.velocity = directionToPlayer * chaseSpeed;
         }
 
         // 被雷达波检测到时调用
