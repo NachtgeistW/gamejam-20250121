@@ -1,11 +1,14 @@
-﻿using Plutono.Util;
+using Plutono.Util;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace Level
 {
     public class GameEvent
     {
-        public struct OnWaveHitWall : IEvent
+        public struct WaveHitWallEvent : IEvent
         {
+            public List<GameObject> hittedWalls;
         }
 
         public struct OnWaveHitEnemy : IEvent
@@ -14,6 +17,11 @@ namespace Level
 
         public struct OnPlayerReachDoor : IEvent
         {
+        }
+
+        public struct GameOverEvent : IEvent
+        {
+            public bool IsWin;
         }
     }
 }

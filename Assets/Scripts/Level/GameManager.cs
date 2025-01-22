@@ -1,6 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+sing System.Runtime.CompilerServices;
 using Plutono.Util;
+using UnityEngine;
+using UnityEngine.Tilemaps;
 
 namespace Level
 {
@@ -14,26 +17,61 @@ namespace Level
         public Player player;
         public List<Enemy> enemies;
 
+        public GameObject enemyPrefab;
+        public Transform enemiesTransform;
+
+        public bool IsGameBegin { get; private set; } = false;
+        public bool IsGameOver { get; private set; } = false;
+
+        private void OnEnable()
+        {
+            EventCenter.AddListener<GameEvent.GameOverEvent>(OnGameOver);
+        }
+        private void OnDisable()
+        {
+            EventCenter.RemoveListener<GameEvent.GameOverEvent>(OnGameOver);
+        }
+
+        private void OnGameOver(GameEvent.GameOverEvent evt)
+        {
+            IsGameOver = true;
+            Debug.Log(evt.IsWin ? "You Win" : "You Lose...");
+        }
+
         private void Start()
         {
-            map = InitMap();
-            player = InitPlayer();
-            enemies = InitEnemies();
+            //map = InitMap();
+            InitPlayer();
+            InitEnemies();
+
+            IsGameBegin = true;
         }
 
         private Map InitMap()
         {
-            throw new NotImplementedException();
+            var map = new Map();
+
+            var tilemap = GetComponent<Tilemap>();
+            return map;
         }
 
-        private Player InitPlayer()
+        private void InitPlayer()
         {
-            throw new NotImplementedException();
+            player = FindObjectOfType<Player>();
+
+            var start = GridMapManager.Instance.GetTileDetailsList(MapTileType.Start)[0];
+            player.MovePlayerTo(new Vector2Int(start.girdX, start.girdY));
         }
 
-        private List<Enemy> InitEnemies()
+        private void InitEnemies()
         {
-            throw new NotImplementedException();
+            var enemyTileDetails = GridMapManager.Instance.GetTileDetailsList(MapTileType.Enemy);
+
+            foreach (var enemyTileDetail in enemyTileDetails)
+            {
+                var enemy = Instantiate(enemyPrefab, enemiesTransform).GetComponent<Enemy>();
+                enemy.MoveTo(new Vector2Int(enemyTileDetail.girdX, enemyTileDetail.girdY));
+            }
         }
     }
 }
