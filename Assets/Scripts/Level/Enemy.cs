@@ -35,6 +35,8 @@ namespace Level
         private Player player;
         private Vector2Int currentGridPosition;
 
+        [SerializeField] private Rigidbody2D rb;
+
         private void Start()
         {
             grid = FindObjectOfType<Grid>();
@@ -105,21 +107,19 @@ namespace Level
 
         private void ChaseBehavior()
         {
-            Vector3 playerPosition = player.transform.position;
-            Vector3 moveDirection = (playerPosition - transform.position).normalized;
-
-            // 移动向玩家
-            transform.position = Vector3.MoveTowards(
-                transform.position,
-                playerPosition,
-                chaseSpeed * Time.deltaTime
-            );
-
-            // 检查是否抓到玩家
-            if (Vector3.Distance(transform.position, playerPosition) < catchDistance)
+            // 使用 OverlapCircle 检测是否接触到玩家，而不是用距离判断
+            var colliders = Physics2D.OverlapCircleAll(transform.position, catchDistance);
+            if (colliders.Any(collider => collider.CompareTag("Player")))
             {
                 EventCenter.Broadcast(new GameEvent.GameOverEvent { IsWin = false });
+                return; // 确保在触发游戏结束后不再移动
             }
+
+            // 获取到玩家的方向
+            var directionToPlayer = (player.transform.position - transform.position).normalized;
+
+            // 使用 Rigidbody2D 来移动，而不是直接设置位置
+            rb.velocity = directionToPlayer * chaseSpeed;
         }
 
         // 被雷达波检测到时调用
