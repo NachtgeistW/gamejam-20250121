@@ -12,7 +12,7 @@ namespace Level
         [field: SerializeField] public MapTileType Type { get; private set; }
         [field: SerializeField] public float Brightness { get; private set; }
         [field: SerializeField] public Vector2 Position { get; private set; }
-        public Dictionary<Vector2Int, Tile> tiles = new Dictionary<Vector2Int, Tile>();//µØÍ¼¿éµÄ×ø±êºÍ¶ÔÓ¦µÄTile¶ÔÏó
+        public Dictionary<Vector2Int, Tile> tiles = new Dictionary<Vector2Int, Tile>();//åœ°å›¾å—çš„åæ ‡å’Œå¯¹åº”çš„Tileå¯¹è±¡
         public float gridSize = 1f;
         
         private void Start()
@@ -20,18 +20,18 @@ namespace Level
             //TilemapPos2Position();
         }
 
-        public Vector3 TilemapPos2Position(Vector2Int gridPosition)//½«Tilemap×ø±ê×ª»»ÎªÊÀ½ç×ø±ê
+        public Vector3 TilemapPos2Position(Vector2Int gridPosition)//å°†Tilemapåæ ‡è½¬æ¢ä¸ºä¸–ç•Œåæ ‡
         {
-            Vector3 position = new Vector3(gridPosition.x * gridSize, 0, gridPosition.y * gridSize);//½«Tilemap×ø±ê×ª»»ÎªÊÀ½ç×ø±êÓÃÁËXÖáºÍZÖá
+            Vector3 position = new Vector3(gridPosition.x * gridSize, 0, gridPosition.y * gridSize);//å°†Tilemapåæ ‡è½¬æ¢ä¸ºä¸–ç•Œåæ ‡ç”¨äº†Xè½´å’ŒZè½´
             return position;
         }
-        public Vector2Int Position2TilemapPos(Vector3 position)//½«ÊÀ½ç×ø±ê×ª»»ÎªTilemap×ø±ê
+        public Vector2Int Position2TilemapPos(Vector3 position)//å°†ä¸–ç•Œåæ ‡è½¬æ¢ä¸ºTilemapåæ ‡
         {
             int gridX = Mathf.FloorToInt(position.x / gridSize);
             int gridY = Mathf.FloorToInt(position.y / gridSize);
             return new Vector2Int(gridX, gridY);
         }
-        //¸ù¾İ×ø±ê»ñÈ¡Tile¶ÔÏó
+        //æ ¹æ®åæ ‡è·å–Tileå¯¹è±¡
         public Tile GetTile(Vector2Int gridPosition)
         {
             if (tiles.ContainsKey(gridPosition))
@@ -41,7 +41,7 @@ namespace Level
             return null;
         }
     }
-    //×ÖµäÀ´´æ´¢Tile¶ÔÏó
+    //å­—å…¸æ¥å­˜å‚¨Tileå¯¹è±¡
 
     public class Tile
     {
