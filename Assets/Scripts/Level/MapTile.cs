@@ -13,6 +13,7 @@ namespace Level
         [field: SerializeField] public float Brightness { get; private set; }
         [field: SerializeField] public Vector2 Position { get; private set; }
         public Dictionary<Vector2Int, Tile> tiles = new Dictionary<Vector2Int, Tile>();//地图块的坐标和对应的Tile对象
+        public float gridSize = 1f;
         
         private void Start()
         {
@@ -22,6 +23,12 @@ namespace Level
         private void TilemapPos2Position()
         {
             throw new NotImplementedException();
+        }
+        public Vector2Int Position2TilemapPos(Vector3 position)
+        {
+            int gridX = Mathf.FloorToInt(position.x / gridSize);
+            int gridY = Mathf.FloorToInt(position.y / gridSize);
+            return new Vector2Int(gridX, gridY);
         }
         //根据坐标获取Tile对象
         public Tile GetTile(Vector2Int gridPosition)

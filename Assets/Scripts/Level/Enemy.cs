@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -22,8 +23,11 @@ namespace Level
 
         [field: SerializeField] public Sprite Sprite { get; private set; }
         public Animator animator { get; private set; }
-        public MapTile maptile { get; private set; }
+        public MapTile maptile { get; private set; }//地块地图
         public Player targetPlayer { get; private set; }
+
+        private List<Vector2Int> path;
+        private int currentPathIndex;
 
         private void Update()
         {
@@ -38,7 +42,8 @@ namespace Level
                 case State.Stay:
                 default:
                     OnStay();
-                    throw new ArgumentOutOfRangeException();
+                    break;
+                    
             }
         }
 
@@ -56,13 +61,23 @@ namespace Level
 
         private void OnCatchPlayer(Player player)
         {
-            animator.Play("CatchPlayer");
+            //animator.Play("CatchPlayer");
             FindPath(Position,player.getPosition());//寻路
             
 
             //throw new System.NotImplementedException();
         }
 
+        
+        void MoveEnemy()
+        {
+            Vector2Int startPos =maptile .Position2TilemapPos(transform.position);
+            Vector2Int targetPos = maptile.Position2TilemapPos(new Vector3(20,20,0));
+
+            path = this.FindPath(startPos, targetPos);
+        }
+        
+        
         //A*算法寻路
         public List<Vector2Int> FindPath(Vector2Int start, Vector2Int target)
         {
@@ -127,7 +142,7 @@ namespace Level
             return neighbors;
 
         }
-        private float Heuristic(Vector2Int a, Vector2Int b)
+        private float Heuristic(Vector2Int a, Vector2Int b)//启发函数
         {
             return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y);
         }

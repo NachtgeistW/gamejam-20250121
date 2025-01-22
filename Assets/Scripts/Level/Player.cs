@@ -27,7 +27,10 @@ namespace Level
         {
             InputX = Input.GetAxisRaw("Horizontal");
             InputY = Input.GetAxisRaw("Vertical");
-
+            Vector2 movement = new Vector2(InputX, InputY);
+            transform.LookAt((Vector2)transform.position + movement);
+            
+            transform.position +=new Vector3 ((movement * Speed * Time.deltaTime).x, (movement * Speed * Time.deltaTime).y,0f);
             throw new System.NotImplementedException();
         }
 
