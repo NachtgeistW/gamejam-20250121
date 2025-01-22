@@ -19,6 +19,24 @@ namespace Level
 
         public bool IsGameOver { get; private set; } = false;
 
+        private void OnEnable()
+        {
+            EventCenter.AddListener<GameEvent.GameOverEvent>(OnGameOver);
+        }
+        private void OnDisable()
+        {
+            EventCenter.RemoveListener<GameEvent.GameOverEvent>(OnGameOver);
+        }
+
+        private void OnGameOver(GameEvent.GameOverEvent evt)
+        {
+            IsGameOver = true;
+            if (evt.IsWin)
+            {
+
+            }
+        }
+
         private void Start()
         {
             //map = InitMap();
@@ -29,7 +47,7 @@ namespace Level
         private Map InitMap()
         {
             var map = new Map();
-            
+
             var tilemap = GetComponent<Tilemap>();
             return map;
         }

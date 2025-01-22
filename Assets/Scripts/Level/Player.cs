@@ -24,6 +24,16 @@ namespace Level
 
         private bool isMoveEnable = true;
 
+
+        private void OnEnable()
+        {
+            EventCenter.AddListener<GameEvent.GameOverEvent>(OnGameOver);
+        }
+        private void OnDisable()
+        {
+            EventCenter.RemoveListener<GameEvent.GameOverEvent>(OnGameOver);
+        }
+
         private void Start()
         {
             //grid = FindObjectOfType<Grid>();
@@ -83,19 +93,21 @@ namespace Level
             var pos = Grid.WorldToCell(transform.position);
             Position = new Vector2Int(pos.x, pos.y);
         }
-        //玩家移动
-
-
-        //玩家死亡
-        public void OnGameOver()
-        {
-            Destroy(gameObject);
-        }
 
         //发射电波
         private void SendOutRadioWaves()
         {
             if (Input.GetKeyDown(KeyCode.Space)) Debug.Log("发射电波");
+        }
+
+        private void OnGameOver(GameEvent.GameOverEvent evt)
+        {
+            isMoveEnable = false;
+
+            if (!evt.IsWin)
+            {
+                Destroy(gameObject);
+            }
         }
 
         //获取玩家在地图上面的位置

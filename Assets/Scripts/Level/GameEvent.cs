@@ -18,5 +18,10 @@ namespace Level
         public struct OnPlayerReachDoor : IEvent
         {
         }
+
+        public struct GameOverEvent : IEvent
+        {
+            public bool IsWin;
+        }
     }
 }
